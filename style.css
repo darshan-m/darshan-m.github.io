@@ -3,15 +3,29 @@ body {
     padding: 0;
     background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
     font-family: 'Segoe UI', Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    overflow: hidden; /* Prevent scrolling on mobile */
 }
 
 .header {
     text-align: center;
-    padding: 2rem 0 1rem 0;
+    padding: 1.5rem 0 1rem 0;
     color: #333;
     font-size: 2.5rem;
     font-weight: bold;
     letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .header {
+        font-size: 2rem;
+        padding: 1rem 0 0.5rem 0;
+    }
 }
 
 .game-container {
@@ -20,6 +34,8 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 80vh;
+    padding: 0 1rem;
+    box-sizing: border-box; /* Include padding in element's total width and height */
 }
 
 canvas {
@@ -27,6 +43,17 @@ canvas {
     border-radius: 16px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.15);
     border: 2px solid #74ebd5;
+    max-width: 100%;
+    height: auto;
+    touch-action: none;
+    aspect-ratio: 480 / 640; /* Maintain aspect ratio */
+}
+
+@media (max-width: 768px) {
+    canvas {
+        border-radius: 12px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+    }
 }
 
 .instructions {
@@ -34,6 +61,30 @@ canvas {
     color: #555;
     font-size: 1.1rem;
     text-align: center;
+    padding: 0 1rem;
+}
+
+.desktop-instructions {
+    display: block;
+}
+
+.mobile-instructions {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .instructions {
+        font-size: 1rem;
+        margin-top: 0.8rem;
+    }
+    
+    .desktop-instructions {
+        display: none;
+    }
+    
+    .mobile-instructions {
+        display: block;
+    }
 }
 
 .score {
@@ -41,4 +92,32 @@ canvas {
     font-size: 1.3rem;
     color: #222;
     font-weight: bold;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .score {
+        font-size: 1.1rem;
+        margin-top: 0.8rem;
+    }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 480px) {
+    .game-container {
+        min-height: 70vh;
+        padding: 0 0.5rem;
+    }
+    
+    canvas {
+        border-radius: 8px;
+        border-width: 1px;
+    }
+    
+    .header {
+        font-size: 1.8rem;
+        padding: 0.8rem 0 0.4rem 0;
+    }
 }

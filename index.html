@@ -3,14 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <title>Flappy Bird Modern Game</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#74ebd5">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="header">🐦 Flappy Bird Modern</div>
   <div class="game-container">
-  <canvas id="gameCanvas" width="480" height="640" tabindex="0"></canvas>
-  <div class="instructions">Tap, click, or press <b>Space</b> to flap. Avoid the pipes!</div>
+  <canvas id="gameCanvas" tabindex="0"></canvas>
+  <div class="instructions">
+    <span id="instructionText"></span>
+  </div>
   <div class="score" id="scoreDisplay"></div>
   </div>
   <script src="game.js"></script>
