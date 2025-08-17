@@ -1,4 +1,4 @@
-// Flappy Bird style game
+// Snake Game
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -12,16 +12,16 @@ function setCanvasSize() {
 setCanvasSize();
 window.addEventListener('resize', setCanvasSize);
 
-const GRAVITY = 0.5;
-const FLAP = -8;
-const PIPE_WIDTH = 60;
-const PIPE_GAP = 150;
-const BIRD_SIZE = 32;
-let birdY = canvas.height / 2;
-let birdV = 0;
-let pipes = [];
+// Game constants
+const GRID_SIZE = 20;
+const GAME_SPEED = 150; // milliseconds between updates
+let snake = [];
+let food = {};
+let direction = 'right';
+let nextDirection = 'right';
 let score = 0;
 let gameOver = false;
+let gameLoop;
 let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 const scoreDisplay = document.getElementById('scoreDisplay');
@@ -29,172 +29,234 @@ const instructionText = document.getElementById('instructionText');
 
 function updateInstructions() {
     if (isMobile) {
-        instructionText.textContent = 'Tap anywhere to flap! Avoid the pipes!';
+        instructionText.textContent = 'Swipe to change direction! Eat food to grow!';
     } else {
-        instructionText.textContent = 'Tap, click, or press Space to flap. Avoid the pipes!';
+        instructionText.textContent = 'Use arrow keys or WASD to move! Eat food to grow!';
     }
 }
 
 function resetGame() {
-    birdY = canvas.height / 2;
-    birdV = 0;
-    pipes = [];
+    // Initialize snake in the middle of the canvas
+    const startX = Math.floor(canvas.width / (2 * GRID_SIZE)) * GRID_SIZE;
+    const startY = Math.floor(canvas.height / (2 * GRID_SIZE)) * GRID_SIZE;
+    
+    snake = [
+        { x: startX, y: startY },
+        { x: startX - GRID_SIZE, y: startY },
+        { x: startX - GRID_SIZE * 2, y: startY }
+    ];
+    
+    direction = 'right';
+    nextDirection = 'right';
     score = 0;
     gameOver = false;
+    
+    spawnFood();
     updateInstructions();
     updateScoreDisplay();
-    for (let i = 0; i < 3; i++) {
-        pipes.push({
-            x: canvas.width + i * 200,
-            top: Math.random() * (canvas.height - PIPE_GAP - 40) + 20
-        });
+    
+    // Clear existing game loop and start new one
+    if (gameLoop) clearInterval(gameLoop);
+    gameLoop = setInterval(update, GAME_SPEED);
+}
+
+function spawnFood() {
+    const maxX = Math.floor(canvas.width / GRID_SIZE);
+    const maxY = Math.floor(canvas.height / GRID_SIZE);
+    
+    do {
+        food = {
+            x: Math.floor(Math.random() * maxX) * GRID_SIZE,
+            y: Math.floor(Math.random() * maxY) * GRID_SIZE
+        };
+    } while (snake.some(segment => segment.x === food.x && segment.y === food.y));
+}
+
+function update() {
+    if (gameOver) return;
+    
+    // Update direction
+    direction = nextDirection;
+    
+    // Calculate new head position
+    const head = { ...snake[0] };
+    switch (direction) {
+        case 'up': head.y -= GRID_SIZE; break;
+        case 'down': head.y += GRID_SIZE; break;
+        case 'left': head.x -= GRID_SIZE; break;
+        case 'right': head.x += GRID_SIZE; break;
+    }
+    
+    // Check wall collision
+    if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+        gameOver = true;
+        return;
+    }
+    
+    // Check self collision
+    if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+        gameOver = true;
+        return;
+    }
+    
+    // Add new head
+    snake.unshift(head);
+    
+    // Check food collision
+    if (head.x === food.x && head.y === food.y) {
+        score++;
+        updateScoreDisplay();
+        spawnFood();
+    } else {
+        // Remove tail if no food was eaten
+        snake.pop();
     }
 }
 
-function drawBird() {
-    ctx.save();
-    ctx.translate(60, birdY);
-    ctx.rotate(birdV * 0.03);
-    ctx.fillStyle = '#ffeb3b';
-    ctx.beginPath();
-    ctx.arc(0, 0, BIRD_SIZE / 2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-}
-
-function drawPipes() {
-    ctx.fillStyle = '#4caf50';
-    pipes.forEach(pipe => {
-        // Top pipe
-        ctx.fillRect(pipe.x, 0, PIPE_WIDTH, pipe.top);
-        // Bottom pipe
-        ctx.fillRect(pipe.x, pipe.top + PIPE_GAP, PIPE_WIDTH, canvas.height - pipe.top - PIPE_GAP);
+function draw() {
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw snake
+    ctx.fillStyle = '#4CAF50';
+    snake.forEach((segment, index) => {
+        if (index === 0) {
+            // Draw head with different color
+            ctx.fillStyle = '#2E7D32';
+        } else {
+            ctx.fillStyle = '#4CAF50';
+        }
+        ctx.fillRect(segment.x, segment.y, GRID_SIZE - 2, GRID_SIZE - 2);
     });
-}
-
-function drawScore() {
-    // No longer drawing directly on canvas, using DOM element
+    
+    // Draw food
+    ctx.fillStyle = '#FF5722';
+    ctx.beginPath();
+    ctx.arc(food.x + GRID_SIZE/2, food.y + GRID_SIZE/2, GRID_SIZE/2 - 2, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Draw game over screen
+    if (gameOver) {
+        ctx.fillStyle = 'rgba(0,0,0,0.7)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 36px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2 - 20);
+        
+        ctx.font = '24px Segoe UI';
+        ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+        
+        if (isMobile) {
+            ctx.fillText('Tap to Restart', canvas.width / 2, canvas.height / 2 + 60);
+        } else {
+            ctx.fillText('Click or Press Space to Restart', canvas.width / 2, canvas.height / 2 + 60);
+        }
+    }
 }
 
 function updateScoreDisplay() {
     scoreDisplay.textContent = `SCORE: ${score}`;
 }
 
-function update() {
-    if (gameOver) return;
-    birdV += GRAVITY;
-    birdY += birdV;
-
-    // Bird collision with ground/ceiling
-    if (birdY + BIRD_SIZE / 2 > canvas.height || birdY - BIRD_SIZE / 2 < 0) {
-        gameOver = true;
+function changeDirection(newDirection) {
+    // Prevent 180-degree turns
+    if (
+        (direction === 'up' && newDirection === 'down') ||
+        (direction === 'down' && newDirection === 'up') ||
+        (direction === 'left' && newDirection === 'right') ||
+        (direction === 'right' && newDirection === 'left')
+    ) {
+        return;
     }
-
-    // Move pipes
-    pipes.forEach(pipe => {
-        pipe.x -= 1.5;
-    });
-
-    // Add new pipe
-    if (pipes[0].x < -PIPE_WIDTH) {
-        pipes.shift();
-        pipes.push({
-            x: canvas.width,
-            top: Math.random() * (canvas.height - PIPE_GAP - 40) + 20
-        });
-        score++;
-        updateScoreDisplay();
-    }
-
-    // Bird collision with pipes
-    pipes.forEach(pipe => {
-        if (
-            60 + BIRD_SIZE / 2 > pipe.x &&
-            60 - BIRD_SIZE / 2 < pipe.x + PIPE_WIDTH &&
-            (birdY - BIRD_SIZE / 2 < pipe.top || birdY + BIRD_SIZE / 2 > pipe.top + PIPE_GAP)
-        ) {
-            gameOver = true;
-        }
-    });
+    nextDirection = newDirection;
 }
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPipes();
-    drawBird();
-    drawScore();
-    if (gameOver) {
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 36px Segoe UI';
-        ctx.fillText('Game Over!', canvas.width / 2 - 100, canvas.height / 2 - 20);
-        ctx.font = '24px Segoe UI';
-        if (isMobile) {
-            ctx.fillText('Tap to Restart', canvas.width / 2 - 80, canvas.height / 2 + 20);
+// Touch/swipe handling for mobile
+let touchStartX = 0;
+let touchStartY = 0;
+
+canvas.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+}, { passive: false });
+
+canvas.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
+    
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        if (deltaX > 0) {
+            changeDirection('right');
         } else {
-            ctx.fillText('Tap or Click to Restart', canvas.width / 2 - 110, canvas.height / 2 + 20);
+            changeDirection('left');
+        }
+    } else {
+        // Vertical swipe
+        if (deltaY > 0) {
+            changeDirection('down');
+        } else {
+            changeDirection('up');
         }
     }
-}
+}, { passive: false });
 
-function gameLoop() {
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
-}
+// Keyboard controls
+window.addEventListener('keydown', function(e) {
+    e.preventDefault();
+    
+    switch(e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+            changeDirection('up');
+            break;
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+            changeDirection('down');
+            break;
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+            changeDirection('left');
+            break;
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+            changeDirection('right');
+            break;
+        case ' ':
+            if (gameOver) {
+                resetGame();
+            }
+            break;
+    }
+});
 
-// Flap or restart on key, click, or touch
-function flapOrRestart() {
+// Mouse click to restart
+canvas.addEventListener('click', function(e) {
     if (gameOver) {
         resetGame();
-    } else {
-        birdV = FLAP;
     }
-}
+});
 
-// Prevent context menu on long press (mobile)
+// Prevent context menu and text selection
 canvas.addEventListener('contextmenu', function(e) {
     e.preventDefault();
 });
 
-// Prevent text selection on mobile
 canvas.addEventListener('selectstart', function(e) {
     e.preventDefault();
 });
 
-window.addEventListener('keydown', function(e) {
-    if (e.code === 'Space') {
-        e.preventDefault();
-        flapOrRestart();
-    }
-});
-
-// Enhanced mobile touch support
-const gameContainer = document.querySelector('.game-container');
-
-// Touch events with better handling
-gameContainer.addEventListener('touchstart', function(e) {
-    if (e.target === canvas) {
-        e.preventDefault();
-        e.stopPropagation();
-        flapOrRestart();
-    }
-}, { passive: false });
-
-gameContainer.addEventListener('touchend', function(e) {
-    if (e.target === canvas) {
-        e.preventDefault();
-    }
-}, { passive: false });
-
-// Mouse events for desktop
-gameContainer.addEventListener('mousedown', function(e) {
-    e.preventDefault();
-    flapOrRestart();
-});
-
-// Prevent scrolling on mobile when touching the game
+// Prevent scrolling on mobile
 if (isMobile) {
     document.addEventListener('touchmove', function(e) {
         if (e.target === canvas) {
@@ -203,10 +265,16 @@ if (isMobile) {
     }, { passive: false });
 }
 
-// Focus canvas for keyboard events on desktop
+// Focus canvas for keyboard events
 canvas.focus();
 
+// Start the game
 resetGame();
-updateInstructions(); // Initial call to set instructions
-updateScoreDisplay(); // Initial call to set score display
-gameLoop();
+
+// Draw loop
+function drawLoop() {
+    draw();
+    requestAnimationFrame(drawLoop);
+}
+
+drawLoop();
