@@ -103,7 +103,7 @@ function draw() {
         ctx.font = 'bold 36px Segoe UI';
         ctx.fillText('Game Over!', canvas.width / 2 - 100, canvas.height / 2 - 20);
         ctx.font = '24px Segoe UI';
-        ctx.fillText('Press Space to Restart', canvas.width / 2 - 110, canvas.height / 2 + 20);
+        ctx.fillText('Tap or Click to Restart', canvas.width / 2 - 110, canvas.height / 2 + 20);
     }
 }
 
@@ -113,14 +113,26 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
+// Flap or restart on key, click, or touch
+function flapOrRestart() {
+    if (gameOver) {
+        resetGame();
+    } else {
+        birdV = FLAP;
+    }
+}
+
 window.addEventListener('keydown', function(e) {
     if (e.code === 'Space') {
-        if (gameOver) {
-            resetGame();
-        } else {
-            birdV = FLAP;
-        }
+        flapOrRestart();
     }
+});
+canvas.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    flapOrRestart();
+}, { passive: false });
+canvas.addEventListener('mousedown', function(e) {
+    flapOrRestart();
 });
 
 resetGame();
