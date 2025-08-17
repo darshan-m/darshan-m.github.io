@@ -2,96 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Catch the Button Game</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      margin-top: 20px;
-    }
-    #game-area {
-      position: relative;
-      width: 100%;
-      height: 80vh;
-      border: 2px solid #333;
-      background: #fff;
-      overflow: hidden;
-      margin: 20px auto;
-    }
-    #target {
-      position: absolute;
-      padding: 10px 20px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    #scoreboard {
-      font-size: 18px;
-      margin: 10px;
-    }
-  </style>
+  <title>Flappy Bird Modern Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🎯 Catch the Button!</h1>
-  <p id="scoreboard">Score: 0 | Time left: 30s</p>
-  <div id="game-area">
-    <button id="target">Click Me!</button>
+  <div class="header">🐦 Flappy Bird Modern</div>
+  <div class="game-container">
+    <canvas id="gameCanvas" width="480" height="640"></canvas>
+    <div class="instructions">Press <b>Space</b> to flap. Avoid the pipes!</div>
+    <div class="score" id="scoreDisplay"></div>
   </div>
-
-  <script>
-    const target = document.getElementById("target");
-    const gameArea = document.getElementById("game-area");
-    const scoreboard = document.getElementById("scoreboard");
-
-    let score = 0;
-    let timeLeft = 30;
-    let gameActive = true;
-
-    // Move button to random position
-    function moveTarget() {
-      const areaWidth = gameArea.clientWidth;
-      const areaHeight = gameArea.clientHeight;
-      const buttonWidth = target.offsetWidth;
-      const buttonHeight = target.offsetHeight;
-
-      const randomX = Math.random() * (areaWidth - buttonWidth);
-      const randomY = Math.random() * (areaHeight - buttonHeight);
-
-      target.style.left = randomX + "px";
-      target.style.top = randomY + "px";
-    }
-
-    // When player clicks button
-    target.addEventListener("click", () => {
-      if (!gameActive) return;
-      score++;
-      scoreboard.textContent = `Score: ${score} | Time left: ${timeLeft}s`;
-      moveTarget();
-    });
-
-    // Countdown timer
-    const timer = setInterval(() => {
-      timeLeft--;
-      scoreboard.textContent = `Score: ${score} | Time left: ${timeLeft}s`;
-
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        gameActive = false;
-        target.style.display = "none";
-        scoreboard.textContent = `⏳ Time's up! Final Score: ${score}`;
-      }
-    }, 1000);
-
-    // Start with random position
-    moveTarget();
-  </script>
+  <script src="game.js"></script>
 </body>
 </html>
