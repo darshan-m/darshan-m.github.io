@@ -1,19 +1,18 @@
 body {
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+    background: linear-gradient(135deg, #1976D2 0%, #42A5F5 100%);
     font-family: 'Segoe UI', Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
-    touch-action: manipulation;
-    overflow: hidden; /* Prevent scrolling on mobile */
+    min-height: 100vh;
 }
 
 .header {
     text-align: center;
-    padding: 1.5rem 0 1rem 0;
+    padding: 2rem 0 1.5rem 0;
     color: #fff;
     font-size: 2.5rem;
     font-weight: bold;
@@ -24,104 +23,178 @@ body {
 @media (max-width: 768px) {
     .header {
         font-size: 2rem;
-        padding: 1rem 0 0.5rem 0;
+        padding: 1.5rem 0 1rem 0;
     }
 }
 
-.game-container {
+.tools-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .tools-container {
+        grid-template-columns: 1fr;
+        padding: 0 0.5rem 1.5rem 0.5rem;
+        gap: 1rem;
+    }
+}
+
+.tool-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tool-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+}
+
+.tool-card h2 {
+    margin: 0 0 1.5rem 0;
+    color: #1976D2;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #E3F2FD;
+    padding-bottom: 0.5rem;
+}
+
+.converter-grid {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 80vh;
-    padding: 0 1rem;
-    box-sizing: border-box; /* Include padding in element's total width and height */
+    gap: 1rem;
 }
 
-canvas {
-    background: #1B5E20;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    border: 3px solid #4CAF50;
-    max-width: 100%;
-    height: auto;
-    touch-action: none;
-    aspect-ratio: 480 / 640; /* Maintain aspect ratio */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-@media (max-width: 768px) {
-    canvas {
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        border-width: 2px;
-    }
+.input-group label {
+    font-weight: 600;
+    color: #424242;
+    font-size: 0.9rem;
 }
 
-.instructions {
-    margin-top: 1rem;
-    color: #fff;
-    font-size: 1.1rem;
-    text-align: center;
-    padding: 0 1rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
-
-.desktop-instructions {
-    display: block;
-}
-
-.mobile-instructions {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .instructions {
-        font-size: 1rem;
-        margin-top: 0.8rem;
-    }
-    
-    .desktop-instructions {
-        display: none;
-    }
-    
-    .mobile-instructions {
-        display: block;
-    }
-}
-
-.score {
-    margin-top: 1rem;
-    font-size: 1.3rem;
-    color: #fff;
-    font-weight: bold;
-    background: rgba(76, 175, 80, 0.8);
-    padding: 0.5rem 1rem;
+.number-input {
+    padding: 0.75rem;
+    border: 2px solid #E0E0E0;
     border-radius: 8px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    background: #FAFAFA;
+    transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-@media (max-width: 768px) {
-    .score {
-        font-size: 1.1rem;
-        margin-top: 0.8rem;
-    }
+.number-input:focus {
+    outline: none;
+    border-color: #2196F3;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
 }
 
-/* Mobile-specific improvements */
+.input-with-unit {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-with-unit .number-input {
+    flex: 1;
+}
+
+.unit-select {
+    padding: 0.75rem;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #FAFAFA;
+    color: #424242;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.unit-select:focus {
+    outline: none;
+    border-color: #2196F3;
+}
+
+.result-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #E3F2FD;
+    border-radius: 8px;
+    border-left: 4px solid #2196F3;
+}
+
+.result-group label {
+    font-weight: 600;
+    color: #1976D2;
+    font-size: 0.9rem;
+}
+
+.result-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1565C0;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+}
+
+/* Mobile optimizations */
 @media (max-width: 480px) {
-    .game-container {
-        min-height: 70vh;
-        padding: 0 0.5rem;
+    .tool-card {
+        padding: 1rem;
+        border-radius: 12px;
     }
     
-    canvas {
-        border-radius: 8px;
-        border-width: 1px;
+    .tool-card h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
     }
     
-    .header {
-        font-size: 1.8rem;
-        padding: 0.8rem 0 0.4rem 0;
+    .number-input, .unit-select {
+        padding: 0.6rem;
+        font-size: 0.9rem;
     }
+    
+    .result-value {
+        font-size: 1rem;
+    }
+}
+
+/* Input validation styles */
+.number-input.error {
+    border-color: #F44336;
+    background: #FFEBEE;
+}
+
+.number-input.success {
+    border-color: #4CAF50;
+    background: #E8F5E8;
+}
+
+/* Animation for results */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-value {
+    animation: fadeIn 0.3s ease;
 }

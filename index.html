@@ -2,23 +2,146 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Snake Game Modern</title>
+  <title>RTL Design Engineer Tools</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#74ebd5">
+  <meta name="theme-color" content="#2196F3">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="header">🐍 Snake Game Modern</div>
-  <div class="game-container">
-  <canvas id="gameCanvas" tabindex="0"></canvas>
-  <div class="instructions">
-    <span id="instructionText"></span>
+  <div class="header">🔧 RTL Design Engineer Tools</div>
+  
+  <div class="tools-container">
+    <!-- Number Converter Tool -->
+    <div class="tool-card">
+      <h2>Number Converter</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="binary">Binary</label>
+          <input type="text" id="binary" placeholder="Enter binary number" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="decimal">Decimal</label>
+          <input type="text" id="decimal" placeholder="Enter decimal number" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="hexadecimal">Hexadecimal</label>
+          <input type="text" id="hexadecimal" placeholder="Enter hex number" class="number-input">
+        </div>
+      </div>
+    </div>
+
+    <!-- Frequency/Period Converter Tool -->
+    <div class="tool-card">
+      <h2>Frequency ↔ Period Converter</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="frequency">Frequency</label>
+          <div class="input-with-unit">
+            <input type="number" id="frequency" placeholder="Enter frequency" class="number-input">
+            <select id="freqUnit" class="unit-select">
+              <option value="Hz">Hz</option>
+              <option value="kHz">kHz</option>
+              <option value="MHz">MHz</option>
+              <option value="GHz">GHz</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="period">Period</label>
+          <div class="input-with-unit">
+            <input type="number" id="period" placeholder="Enter period" class="number-input">
+            <select id="periodUnit" class="unit-select">
+              <option value="s">s</option>
+              <option value="ms">ms</option>
+              <option value="μs">μs</option>
+              <option value="ns">ns</option>
+              <option value="ps">ps</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clock Domain Crossing Calculator -->
+    <div class="tool-card">
+      <h2>Clock Domain Crossing Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="sourceClock">Source Clock (MHz)</label>
+          <input type="number" id="sourceClock" placeholder="100" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="destClock">Destination Clock (MHz)</label>
+          <input type="number" id="destClock" placeholder="50" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Required FIFO Depth</label>
+          <div class="result-value" id="fifoDepth">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wire Length Calculator -->
+    <div class="tool-card">
+      <h2>Wire Length Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="wireDelay">Wire Delay (ps)</label>
+          <input type="number" id="wireDelay" placeholder="100" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="wireCapacitance">Capacitance per mm (pF/mm)</label>
+          <input type="number" id="wireCapacitance" placeholder="0.1" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Estimated Length (mm)</label>
+          <div class="result-value" id="wireLength">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Power Calculator -->
+    <div class="tool-card">
+      <h2>Power Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="voltage">Voltage (V)</label>
+          <input type="number" id="voltage" placeholder="1.2" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="current">Current (mA)</label>
+          <input type="number" id="current" placeholder="100" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Power (mW)</label>
+          <div class="result-value" id="power">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timing Calculator -->
+    <div class="tool-card">
+      <h2>Setup/Hold Time Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="clockPeriod">Clock Period (ns)</label>
+          <input type="number" id="clockPeriod" placeholder="10" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="comboDelay">Combinational Delay (ns)</label>
+          <input type="number" id="comboDelay" placeholder="5" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Max Setup Time (ns)</label>
+          <div class="result-value" id="maxSetupTime">-</div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="score" id="scoreDisplay"></div>
-  </div>
-  <script src="game.js"></script>
+
+  <script src="tools.js"></script>
 </body>
 </html>
