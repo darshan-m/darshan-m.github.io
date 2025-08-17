@@ -65,47 +65,199 @@
       </div>
     </div>
 
-    <!-- Clock Domain Crossing Calculator -->
+    <!-- ARM Cortex Clock Domain Calculator -->
     <div class="tool-card">
-      <h2>Clock Domain Crossing Calculator</h2>
+      <h2>ARM Cortex Clock Domain Calculator</h2>
       <div class="converter-grid">
         <div class="input-group">
-          <label for="sourceClock">Source Clock (MHz)</label>
-          <input type="number" id="sourceClock" placeholder="100" class="number-input">
+          <label for="cpuFreq">CPU Frequency (MHz)</label>
+          <input type="number" id="cpuFreq" placeholder="1000" class="number-input">
         </div>
         <div class="input-group">
-          <label for="destClock">Destination Clock (MHz)</label>
-          <input type="number" id="destClock" placeholder="50" class="number-input">
+          <label for="busFreq">AXI Bus Frequency (MHz)</label>
+          <input type="number" id="busFreq" placeholder="250" class="number-input">
         </div>
         <div class="result-group">
           <label>Required FIFO Depth</label>
-          <div class="result-value" id="fifoDepth">-</div>
+          <div class="result-value" id="cortexFifoDepth">-</div>
         </div>
       </div>
     </div>
 
-    <!-- Wire Length Calculator -->
+    <!-- AXI Burst Calculator -->
     <div class="tool-card">
-      <h2>Wire Length Calculator</h2>
+      <h2>AXI Burst Calculator</h2>
       <div class="converter-grid">
         <div class="input-group">
-          <label for="wireDelay">Wire Delay (ps)</label>
-          <input type="number" id="wireDelay" placeholder="100" class="number-input">
+          <label for="burstLength">Burst Length</label>
+          <input type="number" id="burstLength" placeholder="16" class="number-input">
         </div>
         <div class="input-group">
-          <label for="wireCapacitance">Capacitance per mm (pF/mm)</label>
-          <input type="number" id="wireCapacitance" placeholder="0.1" class="number-input">
+          <label for="dataWidth">Data Width (bits)</label>
+          <input type="number" id="dataWidth" placeholder="64" class="number-input">
         </div>
         <div class="result-group">
-          <label>Estimated Length (mm)</label>
-          <div class="result-value" id="wireLength">-</div>
+          <label>Total Bytes Transferred</label>
+          <div class="result-value" id="totalBytes">-</div>
         </div>
       </div>
     </div>
 
-    <!-- Power Calculator -->
+    <!-- Bit Field Visualizer -->
     <div class="tool-card">
-      <h2>Power Calculator</h2>
+      <h2>Bit Field Visualizer</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="bitFieldValue">Value</label>
+          <input type="text" id="bitFieldValue" placeholder="Enter value (bin/dec/hex)" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="bitFieldWidth">Bit Width</label>
+          <input type="number" id="bitFieldWidth" placeholder="8" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Bit Pattern</label>
+          <div class="result-value" id="bitFieldPattern">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gray Code Converter -->
+    <div class="tool-card">
+      <h2>Gray Code ↔ Binary Converter</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="grayBinary">Binary</label>
+          <input type="text" id="grayBinary" placeholder="Enter binary" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="grayGray">Gray Code</label>
+          <input type="text" id="grayGray" placeholder="Enter gray code" class="number-input">
+        </div>
+      </div>
+    </div>
+
+    <!-- Parity Calculator -->
+    <div class="tool-card">
+      <h2>Parity Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="parityInput">Binary Value</label>
+          <input type="text" id="parityInput" placeholder="e.g. 101101" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Even Parity</label>
+          <div class="result-value" id="evenParity">-</div>
+        </div>
+        <div class="result-group">
+          <label>Odd Parity</label>
+          <div class="result-value" id="oddParity">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bus Width Calculator -->
+    <div class="tool-card">
+      <h2>Bus Width Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="busDataRate">Data Rate (Mbps)</label>
+          <input type="number" id="busDataRate" placeholder="1000" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="busFreq">Clock Frequency (MHz)</label>
+          <input type="number" id="busFreq" placeholder="100" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Required Bus Width (bits)</label>
+          <div class="result-value" id="busWidth">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SRAM/ROM Size Calculator -->
+    <div class="tool-card">
+      <h2>SRAM/ROM Size Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="memAddrWidth">Address Width (bits)</label>
+          <input type="number" id="memAddrWidth" placeholder="10" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="memDataWidth">Data Width (bits)</label>
+          <input type="number" id="memDataWidth" placeholder="8" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Total Size (bits)</label>
+          <div class="result-value" id="memSizeBits">-</div>
+        </div>
+        <div class="result-group">
+          <label>Total Size (bytes)</label>
+          <div class="result-value" id="memSizeBytes">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARM Cortex Cache Calculator -->
+    <div class="tool-card">
+      <h2>ARM Cortex Cache Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="cacheSize">Cache Size (KB)</label>
+          <input type="number" id="cacheSize" placeholder="32" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="lineSize">Line Size (bytes)</label>
+          <input type="number" id="lineSize" placeholder="64" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Number of Lines</label>
+          <div class="result-value" id="cacheLines">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interrupt Vector Calculator -->
+    <div class="tool-card">
+      <h2>Interrupt Vector Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="baseAddr">Base Address (hex)</label>
+          <input type="text" id="baseAddr" placeholder="0x20000000" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="vectorOffset">Vector Offset</label>
+          <input type="number" id="vectorOffset" placeholder="0" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Vector Address</label>
+          <div class="result-value" id="vectorAddress">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DMA Transfer Calculator -->
+    <div class="tool-card">
+      <h2>DMA Transfer Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="dmaFreq">DMA Clock (MHz)</label>
+          <input type="number" id="dmaFreq" placeholder="100" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="transferSize">Transfer Size (bytes)</label>
+          <input type="number" id="transferSize" placeholder="1024" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Transfer Time (μs)</label>
+          <div class="result-value" id="transferTime">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Power Domain Calculator -->
+    <div class="tool-card">
+      <h2>Power Domain Calculator</h2>
       <div class="converter-grid">
         <div class="input-group">
           <label for="voltage">Voltage (V)</label>
@@ -122,21 +274,59 @@
       </div>
     </div>
 
-    <!-- Timing Calculator -->
+    <!-- Memory Map Calculator -->
     <div class="tool-card">
-      <h2>Setup/Hold Time Calculator</h2>
+      <h2>Memory Map Calculator</h2>
       <div class="converter-grid">
         <div class="input-group">
-          <label for="clockPeriod">Clock Period (ns)</label>
-          <input type="number" id="clockPeriod" placeholder="10" class="number-input">
+          <label for="startAddr">Start Address (hex)</label>
+          <input type="text" id="startAddr" placeholder="0x20000000" class="number-input">
         </div>
         <div class="input-group">
-          <label for="comboDelay">Combinational Delay (ns)</label>
-          <input type="number" id="comboDelay" placeholder="5" class="number-input">
+          <label for="sizeBytes">Size (bytes)</label>
+          <input type="number" id="sizeBytes" placeholder="1024" class="number-input">
         </div>
         <div class="result-group">
-          <label>Max Setup Time (ns)</label>
-          <div class="result-value" id="maxSetupTime">-</div>
+          <label>End Address</label>
+          <div class="result-value" id="endAddress">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clock Divider Calculator -->
+    <div class="tool-card">
+      <h2>Clock Divider Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="inputFreq">Input Frequency (MHz)</label>
+          <input type="number" id="inputFreq" placeholder="100" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="divider">Divider Value</label>
+          <input type="number" id="divider" placeholder="4" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Output Frequency (MHz)</label>
+          <div class="result-value" id="outputFreq">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Register Field Calculator -->
+    <div class="tool-card">
+      <h2>Register Field Calculator</h2>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="fieldStart">Field Start Bit</label>
+          <input type="number" id="fieldStart" placeholder="4" class="number-input">
+        </div>
+        <div class="input-group">
+          <label for="fieldWidth">Field Width (bits)</label>
+          <input type="number" id="fieldWidth" placeholder="8" class="number-input">
+        </div>
+        <div class="result-group">
+          <label>Field Mask (hex)</label>
+          <div class="result-value" id="fieldMask">-</div>
         </div>
       </div>
     </div>

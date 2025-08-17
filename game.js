@@ -255,7 +255,7 @@ function initializeWireLengthCalculator() {
             const length = (delay / capacitance) * 0.1; // Rough estimation factor
             
             wireLengthResult.textContent = length.toFixed(2);
-        } else {
+    } else {
             wireLengthResult.textContent = '-';
         }
     }

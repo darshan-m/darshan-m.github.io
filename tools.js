@@ -1,4 +1,4 @@
-// RTL Design Engineer Tools
+// RTL Design Engineer Tools for ARM Cortex CPU Subsystems
 document.addEventListener('DOMContentLoaded', function() {
     initializeTools();
 });
@@ -10,17 +10,47 @@ function initializeTools() {
     // Initialize Frequency/Period Converter
     initializeFrequencyConverter();
     
-    // Initialize Clock Domain Crossing Calculator
-    initializeClockDomainCalculator();
+    // Initialize ARM Cortex Clock Domain Calculator
+    initializeCortexClockDomainCalculator();
     
-    // Initialize Wire Length Calculator
-    initializeWireLengthCalculator();
+    // Initialize AXI Burst Calculator
+    initializeAXIBurstCalculator();
     
-    // Initialize Power Calculator
-    initializePowerCalculator();
+    // Initialize Bit Field Visualizer
+    initializeBitFieldVisualizer();
     
-    // Initialize Timing Calculator
-    initializeTimingCalculator();
+    // Initialize Gray Code Converter
+    initializeGrayCodeConverter();
+    
+    // Initialize Parity Calculator
+    initializeParityCalculator();
+    
+    // Initialize Bus Width Calculator
+    initializeBusWidthCalculator();
+    
+    // Initialize SRAM/ROM Size Calculator
+    initializeMemorySizeCalculator();
+    
+    // Initialize ARM Cortex Cache Calculator
+    initializeCortexCacheCalculator();
+    
+    // Initialize Interrupt Vector Calculator
+    initializeInterruptVectorCalculator();
+    
+    // Initialize DMA Transfer Calculator
+    initializeDMATransferCalculator();
+    
+    // Initialize Power Domain Calculator
+    initializePowerDomainCalculator();
+    
+    // Initialize Memory Map Calculator
+    initializeMemoryMapCalculator();
+    
+    // Initialize Clock Divider Calculator
+    initializeClockDividerCalculator();
+    
+    // Initialize Register Field Calculator
+    initializeRegisterFieldCalculator();
 }
 
 // Number Converter Tool
@@ -213,21 +243,20 @@ function initializeFrequencyConverter() {
     periodUnitSelect.addEventListener('change', convertPeriodToFrequency);
 }
 
-// Clock Domain Crossing Calculator
-function initializeClockDomainCalculator() {
-    const sourceClockInput = document.getElementById('sourceClock');
-    const destClockInput = document.getElementById('destClock');
-    const fifoDepthResult = document.getElementById('fifoDepth');
+// ARM Cortex Clock Domain Calculator
+function initializeCortexClockDomainCalculator() {
+    const cpuFreqInput = document.getElementById('cpuFreq');
+    const busFreqInput = document.getElementById('busFreq');
+    const fifoDepthResult = document.getElementById('cortexFifoDepth');
     
-    function calculateFIFODepth() {
-        const sourceFreq = parseFloat(sourceClockInput.value);
-        const destFreq = parseFloat(destClockInput.value);
+    function calculateCortexFIFODepth() {
+        const cpuFreq = parseFloat(cpuFreqInput.value); // MHz
+        const busFreq = parseFloat(busFreqInput.value); // MHz
         
-        if (sourceFreq && destFreq && sourceFreq > 0 && destFreq > 0) {
-            // Simple FIFO depth calculation
-            // This is a basic formula - real designs may need more complex calculations
-            const ratio = Math.max(sourceFreq / destFreq, destFreq / sourceFreq);
-            const depth = Math.ceil(ratio * 2) + 2; // Add some margin
+        if (cpuFreq > 0 && busFreq > 0) {
+            // ARM Cortex specific FIFO depth calculation
+            const ratio = Math.max(cpuFreq / busFreq, busFreq / cpuFreq);
+            const depth = Math.ceil(ratio * 4) + 8; // ARM Cortex specific margin
             
             fifoDepthResult.textContent = depth.toString();
         } else {
@@ -235,37 +264,252 @@ function initializeClockDomainCalculator() {
         }
     }
     
-    sourceClockInput.addEventListener('input', calculateFIFODepth);
-    destClockInput.addEventListener('input', calculateFIFODepth);
+    cpuFreqInput.addEventListener('input', calculateCortexFIFODepth);
+    busFreqInput.addEventListener('input', calculateCortexFIFODepth);
 }
 
-// Wire Length Calculator
-function initializeWireLengthCalculator() {
-    const wireDelayInput = document.getElementById('wireDelay');
-    const wireCapacitanceInput = document.getElementById('wireCapacitance');
-    const wireLengthResult = document.getElementById('wireLength');
+// AXI Burst Calculator
+function initializeAXIBurstCalculator() {
+    const burstLengthInput = document.getElementById('burstLength');
+    const dataWidthInput = document.getElementById('dataWidth');
+    const totalBytesResult = document.getElementById('totalBytes');
     
-    function calculateWireLength() {
-        const delay = parseFloat(wireDelayInput.value);
-        const capacitance = parseFloat(wireCapacitanceInput.value);
+    function calculateTotalBytes() {
+        const burstLength = parseInt(burstLengthInput.value);
+        const dataWidth = parseInt(dataWidthInput.value);
         
-        if (delay && capacitance && delay > 0 && capacitance > 0) {
-            // Simple wire length estimation based on delay and capacitance
-            // This is a simplified model - real designs need more complex calculations
-            const length = (delay / capacitance) * 0.1; // Rough estimation factor
-            
-            wireLengthResult.textContent = length.toFixed(2);
+        if (burstLength > 0 && dataWidth > 0) {
+            const totalBytes = (burstLength * dataWidth) / 8;
+            totalBytesResult.textContent = totalBytes.toString();
         } else {
-            wireLengthResult.textContent = '-';
+            totalBytesResult.textContent = '-';
         }
     }
     
-    wireDelayInput.addEventListener('input', calculateWireLength);
-    wireCapacitanceInput.addEventListener('input', calculateWireLength);
+    burstLengthInput.addEventListener('input', calculateTotalBytes);
+    dataWidthInput.addEventListener('input', calculateTotalBytes);
 }
 
-// Power Calculator
-function initializePowerCalculator() {
+// Bit Field Visualizer
+function initializeBitFieldVisualizer() {
+    const valueInput = document.getElementById('bitFieldValue');
+    const widthInput = document.getElementById('bitFieldWidth');
+    const patternResult = document.getElementById('bitFieldPattern');
+    
+    function updatePattern() {
+        let valueStr = valueInput.value.trim();
+        let width = parseInt(widthInput.value);
+        
+        if (!width || width < 1 || width > 64) {
+            patternResult.textContent = '-';
+            return;
+        }
+        
+        let value = null;
+        if (/^0b[01]+$/i.test(valueStr)) {
+            value = parseInt(valueStr.slice(2), 2);
+        } else if (/^0x[0-9a-f]+$/i.test(valueStr)) {
+            value = parseInt(valueStr, 16);
+        } else if (/^[01]+$/.test(valueStr)) {
+            value = parseInt(valueStr, 2);
+        } else if (/^\d+$/.test(valueStr)) {
+            value = parseInt(valueStr, 10);
+        }
+        
+        if (value === null || isNaN(value)) {
+            patternResult.textContent = '-';
+            return;
+        }
+        
+        let bits = value.toString(2).padStart(width, '0').slice(-width);
+        patternResult.innerHTML = bits.split('').map(b => 
+            `<span style='color:${b==='1'?'#1976D2':'#888'};font-weight:bold;'>${b}</span>`
+        ).join(' ');
+    }
+    
+    valueInput.addEventListener('input', updatePattern);
+    widthInput.addEventListener('input', updatePattern);
+}
+
+// Gray Code Converter
+function initializeGrayCodeConverter() {
+    const binInput = document.getElementById('grayBinary');
+    const grayInput = document.getElementById('grayGray');
+    let updating = false;
+    
+    binInput.addEventListener('input', function() {
+        if (updating) return;
+        updating = true;
+        
+        const val = binInput.value.trim();
+        if (/^[01]+$/.test(val)) {
+            let n = parseInt(val, 2);
+            let gray = n ^ (n >> 1);
+            grayInput.value = gray.toString(2).padStart(val.length, '0');
+        } else if (!val) {
+            grayInput.value = '';
+        }
+        updating = false;
+    });
+    
+    grayInput.addEventListener('input', function() {
+        if (updating) return;
+        updating = true;
+        
+        const val = grayInput.value.trim();
+        if (/^[01]+$/.test(val)) {
+            let gray = parseInt(val, 2);
+            let bin = gray;
+            for (let shift = 1; shift < val.length; shift++) {
+                bin ^= (gray >> shift);
+            }
+            binInput.value = bin.toString(2).padStart(val.length, '0');
+        } else if (!val) {
+            binInput.value = '';
+        }
+        updating = false;
+    });
+}
+
+// Parity Calculator
+function initializeParityCalculator() {
+    const input = document.getElementById('parityInput');
+    const evenResult = document.getElementById('evenParity');
+    const oddResult = document.getElementById('oddParity');
+    
+    input.addEventListener('input', function() {
+        const val = input.value.trim();
+        if (/^[01]+$/.test(val)) {
+            const ones = val.split('').filter(b => b === '1').length;
+            evenResult.textContent = (ones % 2 === 0) ? '0' : '1';
+            oddResult.textContent = (ones % 2 === 1) ? '0' : '1';
+        } else {
+            evenResult.textContent = '-';
+            oddResult.textContent = '-';
+        }
+    });
+}
+
+// Bus Width Calculator
+function initializeBusWidthCalculator() {
+    const dataRateInput = document.getElementById('busDataRate');
+    const freqInput = document.getElementById('busFreq');
+    const widthResult = document.getElementById('busWidth');
+    
+    function updateBusWidth() {
+        const dataRate = parseFloat(dataRateInput.value); // Mbps
+        const freq = parseFloat(freqInput.value); // MHz
+        
+        if (dataRate > 0 && freq > 0) {
+            const width = Math.ceil((dataRate * 1e6) / (freq * 1e6));
+            widthResult.textContent = width;
+        } else {
+            widthResult.textContent = '-';
+        }
+    }
+    
+    dataRateInput.addEventListener('input', updateBusWidth);
+    freqInput.addEventListener('input', updateBusWidth);
+}
+
+// SRAM/ROM Size Calculator
+function initializeMemorySizeCalculator() {
+    const addrInput = document.getElementById('memAddrWidth');
+    const dataInput = document.getElementById('memDataWidth');
+    const bitsResult = document.getElementById('memSizeBits');
+    const bytesResult = document.getElementById('memSizeBytes');
+    
+    function updateMemSize() {
+        const addr = parseInt(addrInput.value);
+        const data = parseInt(dataInput.value);
+        
+        if (addr > 0 && data > 0) {
+            const totalBits = Math.pow(2, addr) * data;
+            const totalBytes = totalBits / 8;
+            bitsResult.textContent = totalBits.toLocaleString();
+            bytesResult.textContent = totalBytes.toLocaleString();
+        } else {
+            bitsResult.textContent = '-';
+            bytesResult.textContent = '-';
+        }
+    }
+    
+    addrInput.addEventListener('input', updateMemSize);
+    dataInput.addEventListener('input', updateMemSize);
+}
+
+// ARM Cortex Cache Calculator
+function initializeCortexCacheCalculator() {
+    const cacheSizeInput = document.getElementById('cacheSize');
+    const lineSizeInput = document.getElementById('lineSize');
+    const cacheLinesResult = document.getElementById('cacheLines');
+    
+    function calculateCacheLines() {
+        const cacheSize = parseFloat(cacheSizeInput.value); // KB
+        const lineSize = parseFloat(lineSizeInput.value); // bytes
+        
+        if (cacheSize > 0 && lineSize > 0) {
+            const totalBytes = cacheSize * 1024;
+            const lines = totalBytes / lineSize;
+            cacheLinesResult.textContent = lines.toLocaleString();
+        } else {
+            cacheLinesResult.textContent = '-';
+        }
+    }
+    
+    cacheSizeInput.addEventListener('input', calculateCacheLines);
+    lineSizeInput.addEventListener('input', calculateCacheLines);
+}
+
+// Interrupt Vector Calculator
+function initializeInterruptVectorCalculator() {
+    const baseAddrInput = document.getElementById('baseAddr');
+    const vectorOffsetInput = document.getElementById('vectorOffset');
+    const vectorAddressResult = document.getElementById('vectorAddress');
+    
+    function calculateVectorAddress() {
+        const baseAddrStr = baseAddrInput.value.trim();
+        const vectorOffset = parseInt(vectorOffsetInput.value);
+        
+        if (baseAddrStr && /^0x[0-9a-fA-F]+$/.test(baseAddrStr) && !isNaN(vectorOffset)) {
+            const baseAddr = parseInt(baseAddrStr, 16);
+            const vectorAddr = baseAddr + (vectorOffset * 4); // ARM vectors are 4 bytes apart
+            vectorAddressResult.textContent = '0x' + vectorAddr.toString(16).toUpperCase();
+        } else {
+            vectorAddressResult.textContent = '-';
+        }
+    }
+    
+    baseAddrInput.addEventListener('input', calculateVectorAddress);
+    vectorOffsetInput.addEventListener('input', calculateVectorAddress);
+}
+
+// DMA Transfer Calculator
+function initializeDMATransferCalculator() {
+    const dmaFreqInput = document.getElementById('dmaFreq');
+    const transferSizeInput = document.getElementById('transferSize');
+    const transferTimeResult = document.getElementById('transferTime');
+    
+    function calculateTransferTime() {
+        const dmaFreq = parseFloat(dmaFreqInput.value); // MHz
+        const transferSize = parseFloat(transferSizeInput.value); // bytes
+        
+        if (dmaFreq > 0 && transferSize > 0) {
+            const cyclesPerByte = 1; // Assuming 1 cycle per byte transfer
+            const totalCycles = transferSize * cyclesPerByte;
+            const transferTime = (totalCycles / dmaFreq) * 1000; // Convert to μs
+            transferTimeResult.textContent = transferTime.toFixed(2);
+        } else {
+            transferTimeResult.textContent = '-';
+        }
+    }
+    
+    dmaFreqInput.addEventListener('input', calculateTransferTime);
+    transferSizeInput.addEventListener('input', calculateTransferTime);
+}
+
+// Power Domain Calculator
+function initializePowerDomainCalculator() {
     const voltageInput = document.getElementById('voltage');
     const currentInput = document.getElementById('current');
     const powerResult = document.getElementById('power');
@@ -286,39 +530,74 @@ function initializePowerCalculator() {
     currentInput.addEventListener('input', calculatePower);
 }
 
-// Timing Calculator
-function initializeTimingCalculator() {
-    const clockPeriodInput = document.getElementById('clockPeriod');
-    const comboDelayInput = document.getElementById('comboDelay');
-    const maxSetupTimeResult = document.getElementById('maxSetupTime');
+// Memory Map Calculator
+function initializeMemoryMapCalculator() {
+    const startAddrInput = document.getElementById('startAddr');
+    const sizeBytesInput = document.getElementById('sizeBytes');
+    const endAddressResult = document.getElementById('endAddress');
     
-    function calculateSetupTime() {
-        const clockPeriod = parseFloat(clockPeriodInput.value);
-        const comboDelay = parseFloat(comboDelayInput.value);
+    function calculateEndAddress() {
+        const startAddrStr = startAddrInput.value.trim();
+        const sizeBytes = parseInt(sizeBytesInput.value);
         
-        if (clockPeriod && comboDelay && clockPeriod > 0 && comboDelay > 0) {
-            // Basic setup time calculation
-            // Max setup time = Clock period - Combinational delay - Clock-to-Q delay (assumed 0.5ns)
-            const clockToQ = 0.5; // Assumed value
-            const maxSetup = clockPeriod - comboDelay - clockToQ;
-            
-            if (maxSetup > 0) {
-                maxSetupTimeResult.textContent = maxSetup.toFixed(2);
-            } else {
-                maxSetupTimeResult.textContent = 'Timing Violation!';
-                maxSetupTimeResult.style.color = '#F44336';
-            }
+        if (startAddrStr && /^0x[0-9a-fA-F]+$/.test(startAddrStr) && sizeBytes > 0) {
+            const startAddr = parseInt(startAddrStr, 16);
+            const endAddr = startAddr + sizeBytes - 1; // -1 because start address is inclusive
+            endAddressResult.textContent = '0x' + endAddr.toString(16).toUpperCase();
         } else {
-            maxSetupTimeResult.textContent = '-';
-            maxSetupTimeResult.style.color = '#1565C0';
+            endAddressResult.textContent = '-';
         }
     }
     
-    clockPeriodInput.addEventListener('input', calculateSetupTime);
-    comboDelayInput.addEventListener('input', calculateSetupTime);
+    startAddrInput.addEventListener('input', calculateEndAddress);
+    sizeBytesInput.addEventListener('input', calculateEndAddress);
 }
 
-// Add some utility functions
+// Clock Divider Calculator
+function initializeClockDividerCalculator() {
+    const inputFreqInput = document.getElementById('inputFreq');
+    const dividerInput = document.getElementById('divider');
+    const outputFreqResult = document.getElementById('outputFreq');
+    
+    function calculateOutputFreq() {
+        const inputFreq = parseFloat(inputFreqInput.value); // MHz
+        const divider = parseInt(dividerInput.value);
+        
+        if (inputFreq > 0 && divider > 0) {
+            const outputFreq = inputFreq / divider;
+            outputFreqResult.textContent = outputFreq.toFixed(2);
+        } else {
+            outputFreqResult.textContent = '-';
+        }
+    }
+    
+    inputFreqInput.addEventListener('input', calculateOutputFreq);
+    dividerInput.addEventListener('input', calculateOutputFreq);
+}
+
+// Register Field Calculator
+function initializeRegisterFieldCalculator() {
+    const fieldStartInput = document.getElementById('fieldStart');
+    const fieldWidthInput = document.getElementById('fieldWidth');
+    const fieldMaskResult = document.getElementById('fieldMask');
+    
+    function calculateFieldMask() {
+        const fieldStart = parseInt(fieldStartInput.value);
+        const fieldWidth = parseInt(fieldWidthInput.value);
+        
+        if (fieldStart >= 0 && fieldWidth > 0 && fieldStart + fieldWidth <= 32) {
+            const mask = ((1 << fieldWidth) - 1) << fieldStart;
+            fieldMaskResult.textContent = '0x' + mask.toString(16).toUpperCase();
+        } else {
+            fieldMaskResult.textContent = '-';
+        }
+    }
+    
+    fieldStartInput.addEventListener('input', calculateFieldMask);
+    fieldWidthInput.addEventListener('input', calculateFieldMask);
+}
+
+// Utility functions
 function formatNumber(num, decimals = 2) {
     if (num === 0) return '0';
     if (num < 0.01) return num.toExponential(decimals);
