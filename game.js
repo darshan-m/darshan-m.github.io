@@ -127,13 +127,18 @@ window.addEventListener('keydown', function(e) {
         flapOrRestart();
     }
 });
-canvas.addEventListener('touchstart', function(e) {
+// Support tap/click anywhere in the game container
+const gameContainer = document.querySelector('.game-container');
+gameContainer.addEventListener('touchstart', function(e) {
     e.preventDefault();
     flapOrRestart();
 }, { passive: false });
-canvas.addEventListener('mousedown', function(e) {
+gameContainer.addEventListener('mousedown', function(e) {
     flapOrRestart();
 });
+
+// Focus canvas for keyboard events on desktop
+canvas.focus();
 
 resetGame();
 gameLoop();
