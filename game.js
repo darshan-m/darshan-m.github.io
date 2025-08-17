@@ -92,7 +92,7 @@ function update() {
 
     // Move pipes
     pipes.forEach(pipe => {
-        pipe.x -= 3;
+        pipe.x -= 1.5;
     });
 
     // Add new pipe
